@@ -4,8 +4,10 @@ import android.content.Context
 import ru.andkaz.mycomposefm.damain.models.SaveUserNameParam
 import ru.andkaz.mycomposefm.damain.models.UserName
 import ru.andkaz.mycomposefm.damain.repository.UserRepsitory
+import ru.andkaz.mycomposefm.data.storage.UserStorage
+import ru.andkaz.mycomposefm.data.storage.models.User
 
-
+/*
 private const val SHARED_PREFS_NAME ="shared_prefst_name"
 private const val KEY_FIRST_NAME ="firstName"
 private const val KEY_LAST_NAME ="lastName"
@@ -26,7 +28,7 @@ class UserRepsitoryImpl( contex:Context):UserRepsitory {
         return UserName(firstName = firstName, lastName = lastName)
     }
 }
-/*
+
 class SharedPrefUserStorage(contex:Context) : UserStorage {
     private  val sharedPreferences = contex.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
     override fun save(user: User): Boolean {
@@ -41,3 +43,20 @@ class SharedPrefUserStorage(contex:Context) : UserStorage {
         return User(firstName,lastName)
     }
 }*/
+class UserRepositoryImpl(private val userStorage: UserStorage): UserRepsitory {
+    override fun saveName(saveParam:SaveUserNameParam):Boolean{
+        val user = mapToStorage(saveParam=saveParam)
+        return userStorage.save(user)
+    }
+    override fun getName():UserName{
+        val user=userStorage.get()
+        return mapToDomain(user)
+    }
+
+    private fun mapToDomain(user: User):UserName{
+        return  UserName(firstName = user.firstName, lastName = user.lastName)
+    }
+    private fun mapToStorage(saveParam:SaveUserNameParam):User{
+        return  User(firstName = saveParam.name, lastName = "")
+    }
+}

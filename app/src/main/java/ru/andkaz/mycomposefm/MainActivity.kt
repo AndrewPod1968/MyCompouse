@@ -15,13 +15,26 @@ import androidx.compose.ui.unit.dp
 import ru.andkaz.mycomposefm.damain.models.SaveUserNameParam
 import ru.andkaz.mycomposefm.damain.usecase.GetUserNameUseCase
 import ru.andkaz.mycomposefm.damain.usecase.SaveUserNameUseCase
-import ru.andkaz.mycomposefm.data.repository.UserRepsitoryImpl
+import ru.andkaz.mycomposefm.data.repository.UserRepositoryImpl
+//import ru.andkaz.mycomposefm.data.repository.UserRepsitoryImpl
+import ru.andkaz.mycomposefm.data.storage.SharedPrefUserStorage
+import ru.andkaz.mycomposefm.data.storage.UserStorage
 import ru.andkaz.mycomposefm.ui.theme.MyComposeFMTheme
 
 class MainActivity : ComponentActivity() {
-    private val userRepsitory  by lazy(LazyThreadSafetyMode.NONE) {UserRepsitoryImpl(/*userStorage = userStorage*/contex=applicationContext)}
-    private val getUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {   GetUserNameUseCase(userRepsitory=userRepsitory) }
-    private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) { SaveUserNameUseCase(userRepsitory=userRepsitory) }
+    private val userStorage by lazy(LazyThreadSafetyMode.NONE){ SharedPrefUserStorage(contex=applicationContext)
+
+    }
+
+    private val userRepsitory  by lazy(LazyThreadSafetyMode.NONE) {
+        UserRepositoryImpl(SharedPrefUserStorage(contex=applicationContext))
+    }
+    private val getUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {
+        GetUserNameUseCase(userRepsitory=userRepsitory)
+    }
+    private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {
+        SaveUserNameUseCase(userRepsitory=userRepsitory)
+    }
 
 
 
