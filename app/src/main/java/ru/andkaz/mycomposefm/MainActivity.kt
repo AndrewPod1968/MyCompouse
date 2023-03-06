@@ -12,15 +12,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.andkaz.mycomposefm.damain.models.SaveUserNameParam
 import ru.andkaz.mycomposefm.damain.usecase.GetUserNameUseCase
 import ru.andkaz.mycomposefm.damain.usecase.SaveUserNameUseCase
+import ru.andkaz.mycomposefm.data.repository.UserRepsitoryImpl
 import ru.andkaz.mycomposefm.ui.theme.MyComposeFMTheme
 
 class MainActivity : ComponentActivity() {
-    private val getUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {   GetUserNameUseCase(/*userRepsitory=userRepsitory*/) }
-    private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) { SaveUserNameUseCase(/*userRepsitory=userRepsitory*/) }
+    private val userRepsitory  by lazy(LazyThreadSafetyMode.NONE) {UserRepsitoryImpl(/*userStorage = userStorage*/contex=applicationContext)}
+    private val getUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {   GetUserNameUseCase(userRepsitory=userRepsitory) }
+    private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) { SaveUserNameUseCase(userRepsitory=userRepsitory) }
 
 
 
@@ -42,8 +43,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(getUserNameUseCase:GetUserNameUseCase,saveUserNameUseCase:SaveUserNameUseCase) {
-   // private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) { SaveUserNameUseCase(/*userRepsitory=userRepsitory*/) }
-
 
    //Card(modifier = Modifier.fillMaxWidth())
     var saveName:String=""
@@ -68,7 +67,7 @@ fun Greeting(getUserNameUseCase:GetUserNameUseCase,saveUserNameUseCase:SaveUserN
            .fillMaxWidth()
            .padding(10.dp)
        ) {
-           Text("GET DATA")
+           Text("GET USER DATA")
        }
        TextField(value = message.value, onValueChange ={message.value=it} )
        Button(onClick = {
@@ -82,7 +81,7 @@ fun Greeting(getUserNameUseCase:GetUserNameUseCase,saveUserNameUseCase:SaveUserN
            .fillMaxWidth()
            .padding(10.dp)
        ) {
-           Text("SAVE DATA")
+           Text("SAVE USER DATA")
        }
        //OutlinedTextField(value = "Hello",){
 

@@ -1,11 +1,11 @@
 package ru.andkaz.mycomposefm.damain.usecase
 
 import ru.andkaz.mycomposefm.damain.models.UserName
+import ru.andkaz.mycomposefm.damain.repository.UserRepsitory
+import ru.andkaz.mycomposefm.data.repository.UserRepsitoryImpl
 
-class GetUserNameUseCase {
+class GetUserNameUseCase(private val userRepsitory: UserRepsitory) {
    fun execute(): UserName {
-        //return userRepsitory.getName()
-       return UserName(firstName = "Andrew", lastName = "Kaz")
-//
+        return userRepsitory.getName()
    }
 }
