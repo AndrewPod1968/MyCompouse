@@ -13,9 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.andkaz.mycomposefm.damain.models.SaveUserNameParam
+import ru.andkaz.mycomposefm.damain.usecase.GetUserNameUseCase
+import ru.andkaz.mycomposefm.damain.usecase.SaveUserNameUseCase
 import ru.andkaz.mycomposefm.ui.theme.MyComposeFMTheme
 
 class MainActivity : ComponentActivity() {
+    private val getUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {   GetUserNameUseCase(/*userRepsitory=userRepsitory*/) }
+    private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) { SaveUserNameUseCase(/*userRepsitory=userRepsitory*/) }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    Greeting(getUserNameUseCase = getUserNameUseCase,saveUserNameUseCase=saveUserNameUseCase,)
                 }
             }
         }
@@ -33,30 +41,48 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
+fun Greeting(getUserNameUseCase:GetUserNameUseCase,saveUserNameUseCase:SaveUserNameUseCase) {
+   // private val  saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) { SaveUserNameUseCase(/*userRepsitory=userRepsitory*/) }
+
+
    //Card(modifier = Modifier.fillMaxWidth())
+    var saveName:String=""
     val message = remember{mutableStateOf("")}
+    val textH  = remember {
+        mutableStateOf("")
+    }
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )
    {
-  /*     Text(
-           text = "Test git lesson1",
-//           Modifier
-//               .padding(30.dp)
-               //.offset(x = 20.dp, y = 30.dp),
-           //fontSize = 28.sp
-       )*/
-       Text(text = "12324")
-       Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth().padding(10.dp)
+
+       Text(text = textH.value)
+       Button(onClick = {
+           textH.value=saveName
+           val userName=getUserNameUseCase.execute()
+           textH.value="${userName.firstName}  ${userName.lastName}"
+
+
+                        }, modifier = Modifier
+           .fillMaxWidth()
+           .padding(10.dp)
        ) {
-           Text("Get")
+           Text("GET DATA")
        }
        TextField(value = message.value, onValueChange ={message.value=it} )
-       Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth().padding(10.dp)
+       Button(onClick = {
+
+           val text=message.value
+           val params = SaveUserNameParam(name = text)
+           val result =saveUserNameUseCase.execute(param=params)
+           textH.value="Save result = ${result.toString()}"
+
+                        }, modifier = Modifier
+           .fillMaxWidth()
+           .padding(10.dp)
        ) {
-           Text("Save")
+           Text("SAVE DATA")
        }
        //OutlinedTextField(value = "Hello",){
 
@@ -70,6 +96,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     MyComposeFMTheme {
-        Greeting("Android")
+        //Greeting("Android")
     }
 }
