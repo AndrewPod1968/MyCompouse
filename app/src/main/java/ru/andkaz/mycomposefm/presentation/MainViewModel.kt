@@ -18,6 +18,8 @@ class MainViewModel(
     val resultLive: LiveData<String> = resultLiveMutable
 
 
+
+
     init{
         Log.e("AAA","VM created")
     }

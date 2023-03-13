@@ -6,14 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.andkaz.mycomposefm.damain.models.SaveUserNameParam
@@ -22,10 +19,9 @@ import ru.andkaz.mycomposefm.damain.usecase.SaveUserNameUseCase
 import ru.andkaz.mycomposefm.data.repository.UserRepositoryImpl
 //import ru.andkaz.mycomposefm.data.repository.UserRepsitoryImpl
 import ru.andkaz.mycomposefm.data.storage.SharedPrefUserStorage
-import ru.andkaz.mycomposefm.data.storage.UserStorage
 import ru.andkaz.mycomposefm.presentation.MainViewModel
 import ru.andkaz.mycomposefm.presentation.MyViewModel
-import ru.andkaz.mycomposefm.presentation.NameFiewModel
+import ru.andkaz.mycomposefm.presentation.screens.main.NameScreen
 import ru.andkaz.mycomposefm.ui.theme.MyComposeFMTheme
 
 class MainActivity : ComponentActivity() {
@@ -119,20 +115,26 @@ fun Greeting(getUserNameUseCase:GetUserNameUseCase,saveUserNameUseCase:SaveUserN
 
    }
 }
+/*
 @Composable
 fun NameScreen(
     getUserNameUseCase:GetUserNameUseCase,
     saveUserNameUseCase:SaveUserNameUseCase,
     viewModel: NameFiewModel = viewModel()
 ){
-   val state =  viewModel.state.value
-    val message = remember{mutableStateOf("")}
+//   val state =  viewModel.state.value
+
+    val title by viewModel.titleInputFlow.collectAsState()
+
+//    val message = remember{mutableStateOf("")}
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-        Text(text =  state.name)
+
+//        Text(text =  state.name)
+        Text(text =  title.name)
         Button(onClick = {
             val userName=getUserNameUseCase.execute()
             viewModel.onEvent(NameFiewModel.NameEvent.GetName("${userName.firstName}  ${userName.lastName}"))
@@ -144,12 +146,14 @@ fun NameScreen(
         ) {
             Text("GET USER DATA")
         }
-        TextField(value = state.edit_name, onValueChange ={
+//        TextField(value = state.edit_name, onValueChange ={
+        TextField(value = title.edit_name, onValueChange ={
             viewModel.onEvent(NameFiewModel.NameEvent.EnteredName(it))
         } )
         Button(onClick = {
 
-            val text_save =state.edit_name
+//            val text_save =state.edit_name
+            val text_save =title.edit_name
             val params = SaveUserNameParam(name = text_save)
             val result =saveUserNameUseCase.execute(param=params)
 
@@ -165,7 +169,7 @@ fun NameScreen(
 
 }
 
-
+*/
 
 @Preview(showBackground = true)
 @Composable
